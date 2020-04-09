@@ -53,7 +53,7 @@ interface ImageReference{
     sku: string;
 
     version: string &
-             adltypes.MustMatch<'^[-\\w\\._\\(\\)]+'>;
+             adltypes.MustMatch<'^[-\\w\\._\\(\\)]+', /*ignoreCase*/ true>;
 }
 
 interface DataDisk {
