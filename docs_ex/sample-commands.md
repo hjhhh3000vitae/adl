@@ -2,8 +2,8 @@
 
 API need to be preloaded. Add the following cmdline options with directory updated
 ```
---pre-load-apis="name=sample_rp+path=/home/heh/GitHub/hjhhh3000vitae/adl/sample_rp"
---pre-load-runtimes="path=/home/heh/GitHub/hjhhh3000vitae/adl/arm.adl" 
+--pre-load-apis="name=sample_rp+path=/home/khenidak/go/src/github.com/khenidak/adl/sample_rp"
+--pre-load-runtimes="path=/home/khenidak/go/src/github.com/khenidak/adl/arm.adl" 
 ```
 
 # create an instance of a normalized type
@@ -29,10 +29,7 @@ API need to be preloaded. Add the following cmdline options with directory updat
 # normalize
 
 ```
-./cairo \
---pre-load-apis="name=sample_rp+path=/home/heh/GitHub/hjhhh3000vitae/adl/sample_rp" \
---pre-load-runtimes="path=/home/heh/GitHub/hjhhh3000vitae/adl/arm.adl" \
- machinery \
+./cairo machinery \
 --api-name=sample_rp \
 --action=normalize  \
 --api-version="2020-09-09" \
@@ -54,10 +51,7 @@ API need to be preloaded. Add the following cmdline options with directory updat
 # denormalize
 
 ```
-./cairo \
---pre-load-apis="name=sample_rp+path=/home/heh/GitHub/hjhhh3000vitae/adl/sample_rp" \
---pre-load-runtimes="path=/home/heh/GitHub/hjhhh3000vitae/adl/arm.adl" \
- machinery \
+./cairo machinery \
 --api-name=sample_rp \
 --action=denormalize \
 --target-api-version=2020-09-09 \
@@ -87,12 +81,3 @@ API need to be preloaded. Add the following cmdline options with directory updat
 --target-versioned-api-type-name=virtualmachine \
 --source=./docs_ex/sample-rp-sample-data/vm_2020-09-09.json
 ```
-
-# list
-
-```
-./cairo \
---pre-load-apis="name=sample_rp+path=/home/heh/GitHub/hjhhh3000vitae/adl/sample_rp" \
---pre-load-runtimes="path=/home/heh/GitHub/hjhhh3000vitae/adl/arm.adl" \
-list
- ```
