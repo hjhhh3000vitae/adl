@@ -15,7 +15,7 @@ export class adlCliParser extends CommandLineParser {
     private _log_level: CommandLineChoiceParameter;
     private _pre_load_api: CommandLineStringListParameter;
     private _pre_load_runtime: CommandLineStringListParameter;
-
+    private _output_format: CommandLineChoiceParameter;
 
     // TODO: use  printer that can do json/yaml or just pretty print
 
@@ -26,7 +26,7 @@ export class adlCliParser extends CommandLineParser {
     });
 
     //  pass context down the line
-    this.addAction(new showStoreAction(ctx));
+    this.addAction(new showStoreAction(ctx, this._output_format.value ?? 'text'));
     this.addAction(new diffAction(ctx));
     this.addAction(new verifyConformanceAction(ctx));
     this.addAction(new machineryAction(ctx));
@@ -54,6 +54,15 @@ export class adlCliParser extends CommandLineParser {
             parameterLongName: '--pre-load-runtimes',
             description: 'list of runtimes to preload each is path=<path> (assumes runtime use default runtime creator type name)',
             argumentName: 'LIST_RUNTIMES',
+        });
+
+        this._output_format = this.defineChoiceParameter({
+            parameterLongName: '--output',
+            parameterShortName: '-o',
+            alternatives: [ 'text' ],
+            defaultValue: 'text',
+            description: 'output format',
+            required: false,
         });
 
   }
