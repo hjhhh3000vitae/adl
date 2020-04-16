@@ -9,7 +9,7 @@ class tableRow implements Iterable<[number, string, string]> {
     public type: string,
     public property: string,
     public dataType: string,
-    public constraints: string) {}
+    /*public constraints: string*/) {}
     
   *[Symbol.iterator](): Iterator<[number, string, string]> {
     yield [0, "model", this.model];
@@ -17,7 +17,7 @@ class tableRow implements Iterable<[number, string, string]> {
     yield [2, "type", this.type];
     yield [3, "property", this.property];
     yield [4, "dataType", this.dataType];
-    yield [5, "constraints", this.constraints];
+    //yield [5, "constraints", this.constraints];
   }
 }
 
@@ -62,7 +62,7 @@ export class tablePrinter implements printer {
   }
 
   public flushOutput(): void {
-    const header = new tableRow("model", "version", "type", "property", "dataType", "constraints");
+    const header = new tableRow("model", "version", "type", "property", "dataType", /*"constraints"*/);
 
     let columnWidth = new Array<number>();
     for (const [index, key, value] of header) {
@@ -115,12 +115,12 @@ export class tablePrinter implements printer {
       if (prop.isRemoved) continue;
 
       this._output_cache.push(new tableRow(
-        /* model */ this._model, 
-        /* version */ version, 
-        /* type */ model.Name, 
-        /* property */ propertyPrefix + prop.Name, 
-        /* dataType */ `${prop.DataTypeName}/${prop.AliasDataTypeName}`, 
-        /* constraints */ this.getPropertiesConstraintsAsText(prop)));
+        /* model */ this._model,
+        /* version */ version,
+        /* type */ model.Name,
+        /* property */ propertyPrefix + prop.Name,
+        /* dataType */ `${prop.DataTypeName}/${prop.AliasDataTypeName}`,
+        /* constraints */ /*this.getPropertiesConstraintsAsText(prop)*/));
 
       if(prop.DataTypeKind == adlruntime.PropertyDataTypeKind.Complex ||
         prop.DataTypeKind == adlruntime.PropertyDataTypeKind.ComplexArray ||
