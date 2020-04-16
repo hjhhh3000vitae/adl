@@ -4,6 +4,7 @@ import { appContext } from './appContext'
 import * as adlruntime from '@azure-tools/adl.runtime'
 import { printer } from './printers/printer';
 import { textPrinter } from './printers/text_printer';
+import { tablePrinter } from './printers/table_printer';
 
 /* shows what is in store
  * in a runtime env, this will connect to rpaas api server
@@ -46,11 +47,12 @@ export class showStoreAction extends CommandLineAction {
       switch (this._output_format) {
           case 'text': {
               return new textPrinter(this._scope.value ?? 'all', this._show_docs.value);
-              break;
+          }
+          case 'table': {
+              return new tablePrinter(this._scope.value ?? 'all', this._show_docs.value);
           }
           default: {
               return new textPrinter(this._scope.value ?? 'all', this._show_docs.value);
-              break;
           }
       }
   }

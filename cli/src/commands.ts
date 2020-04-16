@@ -59,7 +59,7 @@ export class adlCliParser extends CommandLineParser {
         this._output_format = this.defineChoiceParameter({
             parameterLongName: '--output',
             parameterShortName: '-o',
-            alternatives: [ 'text' ],
+            alternatives: [ 'text', 'table' ],
             defaultValue: 'text',
             description: 'output format',
             required: false,
