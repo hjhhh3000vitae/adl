@@ -93,8 +93,6 @@ export class tablePrinter implements printer {
         prop.DataTypeKind == adlruntime.PropertyDataTypeKind.ComplexMap){
             this.printApiTypeModel(version, prop.getComplexDataTypeOrThrow(), propertyPrefix + prop.Name + '.');
       }
-
-
     }
   }
 
