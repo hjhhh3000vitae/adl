@@ -30,16 +30,18 @@ export class showStoreAction extends CommandLineAction {
     private _filter: CommandLineStringParameter; /* TODO */
     private _show_docs: CommandLineFlagParameter;
     
-    private readonly _output_format: string;
+    private _output_format: string;
 
-    public constructor(private ctx: appContext, outputFormat: string) {
+    public constructor(private ctx: appContext) {
     super({
       actionName: 'list',
       summary: 'shows the apis already loaded in the store',
       documentation: ''
     });
+  }
 
-    this._output_format = outputFormat;
+  public setOutputFormat(outputFormat: string) {
+      this._output_format = outputFormat;
   }
 
   private getPrinter(): printer {

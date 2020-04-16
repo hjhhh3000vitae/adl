@@ -26,7 +26,7 @@ export class adlCliParser extends CommandLineParser {
     });
 
     //  pass context down the line
-    this.addAction(new showStoreAction(ctx, this._output_format.value ?? 'text'));
+    this.addAction(new showStoreAction(ctx));
     this.addAction(new diffAction(ctx));
     this.addAction(new verifyConformanceAction(ctx));
     this.addAction(new machineryAction(ctx));
@@ -84,6 +84,8 @@ export class adlCliParser extends CommandLineParser {
         // use it to create an api manager (store)
         ctx.store = machinery.createApiManager();
 
+        // setup output format
+        (<showStoreAction>this.getAction("list")).setOutputFormat(this._output_format.value ?? "text");
 
         // loadable runtimes
         const runtimes = this._pre_load_runtime.values;
