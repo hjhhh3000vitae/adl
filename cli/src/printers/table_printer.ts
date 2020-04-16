@@ -44,7 +44,7 @@ export class tablePrinter implements printer {
     if(this._scope != "all" && this._scope != "normalized") return;
 
     for (const normalizedType of normalizedTypes) {
-      this.printApiTypeModel("normalized", normalizedType, "$.");
+      this.printApiTypeModel("normalized", normalizedType.Name, normalizedType, "$.");
     }
   }
 
@@ -110,14 +110,14 @@ export class tablePrinter implements printer {
    * Private methods
    */
 
-  private printApiTypeModel(version: string, model: adlruntime.ApiTypeModel, propertyPrefix: string): void {
+  private printApiTypeModel(version: string, type: string, model: adlruntime.ApiTypeModel, propertyPrefix: string): void {
     for (const prop of model.Properties) {
       if (prop.isRemoved) continue;
 
       this._output_cache.push(new tableRow(
         /* model */ this._model,
         /* version */ version,
-        /* type */ model.Name,
+        /* type */ type,
         /* property */ propertyPrefix + prop.Name,
         /* dataType */ `${prop.DataTypeName}/${prop.AliasDataTypeName}`,
         /* constraints */ /*this.getPropertiesConstraintsAsText(prop)*/));
@@ -125,7 +125,7 @@ export class tablePrinter implements printer {
       if(prop.DataTypeKind == adlruntime.PropertyDataTypeKind.Complex ||
         prop.DataTypeKind == adlruntime.PropertyDataTypeKind.ComplexArray ||
         prop.DataTypeKind == adlruntime.PropertyDataTypeKind.ComplexMap){
-            this.printApiTypeModel(version, prop.getComplexDataTypeOrThrow(), propertyPrefix + prop.Name + '.');
+            this.printApiTypeModel(version, type, prop.getComplexDataTypeOrThrow(), propertyPrefix + prop.Name + '.');
       }
     }
   }
@@ -168,7 +168,7 @@ export class tablePrinter implements printer {
     if(this._scope != "all" && this._scope != "versioned") return;
 
     for (const versionedType of versionedTypes) {
-      this.printApiTypeModel(apiVersion, versionedType, "$.");
+      this.printApiTypeModel(apiVersion, versionedType.Name, versionedType, "$.");
     }
   }
 }
