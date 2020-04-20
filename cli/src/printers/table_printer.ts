@@ -1,6 +1,7 @@
 import { printer } from './printer'
 
 import * as adlruntime from '@azure-tools/adl.runtime'
+import { int64 } from '@azure-tools/adl.types';
 
 class tableRow implements Iterable<[number, string, string]> {
   constructor(
@@ -37,27 +38,23 @@ export class tablePrinter implements printer {
 
   public printModel(model: adlruntime.ApiModel): void {
     this._model = model.Name;
-    return;
-  }
 
-  public printNormalizedTypes(normalizedTypes: Iterable<adlruntime.NormalizedApiTypeModel>): void {
-    if(this._scope != "all" && this._scope != "normalized") return;
-
-    for (const normalizedType of normalizedTypes) {
-      this.printApiTypeModel("normalized", normalizedType.Name, normalizedType, "$.");
+    // Normalized types
+    if (this._scope == "all" || this._scope == "normalized") {
+      for (const normalizedType of model.NormalizedTypes) {
+        this.printApiTypeModel("normalized", normalizedType.Name, normalizedType, "$.");
+      }
     }
-  }
 
-  public printApiVersions(apiVersions: Iterable<adlruntime.ApiVersionModel>): void {
-    if(this._scope != "all" && this._scope != "api-versions" && this._scope != "versioned") return;
-
-    for (const apiVersion of apiVersions) {
-      this.printVersionedTypes(apiVersion.Name, apiVersion.VersionedTypes);
+    // Versioned types
+    if (this._scope == "all" || this._scope == "api-versions" || this._scope == "versioned") {
+      for (const apiVersion of model.Versions) {
+        for (const versionedType of apiVersion.VersionedTypes) {
+          this.printApiTypeModel(apiVersion.Name, versionedType.Name, versionedType, "$.");
+        }
+      }
     }
-  }
 
-  public printDocs(docs: adlruntime.ApiJsDoc | undefined): void {
-    // TODO(heh): Does not seem like we have place for docs in table.
     return;
   }
 
@@ -77,28 +74,14 @@ export class tablePrinter implements printer {
 
     let outputLine = "";
     for (const [index, key, value] of header) {
-      if (value.length == 0) {
-        outputLine += "null";
-        outputLine += " ".repeat(columnWidth[index]);
-      }
-      else {
-        outputLine += value;
-        outputLine += " ".repeat(columnWidth[index] + 4 - value.length);
-      }
+      outputLine += tablePrinter.padValue(value.length > 0 ? value : "null", columnWidth[index] + 4);
     }
     console.log(outputLine);
 
     for (const row of this._output_cache) {
       let outputLine = "";
       for (const [index, key, value] of row) {
-        if (value.length == 0) {
-          outputLine += "null";
-          outputLine += " ".repeat(columnWidth[index]);
-        }
-        else {
-          outputLine += value;
-          outputLine += " ".repeat(columnWidth[index] + 4 - value.length);
-        }
+        outputLine += tablePrinter.padValue(value.length > 0 ? value : "null", columnWidth[index] + 4);
       }
       console.log(outputLine);
     }
@@ -130,45 +113,7 @@ export class tablePrinter implements printer {
     }
   }
 
-  private getPropertiesConstraintsAsText(p: adlruntime.ApiTypePropertyModel): string {
-    let constraintsAsText = ""
-    if (p.isEnum) {
-      constraintsAsText = `enum${p.EnumValues}`;
-    }
-    else {
-      for(const c of p.Constraints){
-        constraintsAsText = `${constraintsAsText} | ${c.Name}(${c.Arguments.join(",")})`;
-      }
-    }
-
-    if (p.isMap()) {
-      let keyConstraints = "";
-      for(const c of p.MapKeyConstraints){
-        keyConstraints = keyConstraints + `${c.Name}(` + c.Arguments.join(",") +") | ";
-      }
-
-      if (keyConstraints.length > 0) {
-        constraintsAsText += `; KeyConstraints: ${keyConstraints}`;
-      }
-
-      let valueConstraints = "";
-      for(const c of p.MapValueConstraints){
-         valueConstraints = valueConstraints + `${c.Name}(` + c.Arguments.join(",") +") | ";
-      }
-
-      if (valueConstraints.length > 0) {
-        constraintsAsText += `; ValueConstraints: ${valueConstraints}`;
-      }
-    }
-
-    return constraintsAsText;
-  }
-
-  private printVersionedTypes(apiVersion: string, versionedTypes: Iterable<adlruntime.VersionedApiTypeModel>): void {
-    if(this._scope != "all" && this._scope != "versioned") return;
-
-    for (const versionedType of versionedTypes) {
-      this.printApiTypeModel(apiVersion, versionedType.Name, versionedType, "$.");
-    }
+  private static padValue(value: string, padding: number): string {
+    return value + " ".repeat(padding - value.length > 0 ? padding - value.length : 0);
   }
 }

@@ -85,7 +85,7 @@ export class adlCliParser extends CommandLineParser {
         ctx.store = machinery.createApiManager();
 
         // setup output format
-        (<showStoreAction>this.getAction("list")).setOutputFormat(this._output_format.value ?? "text");
+        ctx.opts.outputFormat = this._output_format.value;
 
         // loadable runtimes
         const runtimes = this._pre_load_runtime.values;

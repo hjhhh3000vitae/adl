@@ -30,8 +30,6 @@ export class showStoreAction extends CommandLineAction {
     private _scope: CommandLineChoiceParameter;
     private _filter: CommandLineStringParameter; /* TODO */
     private _show_docs: CommandLineFlagParameter;
-    
-    private _output_format: string;
 
     public constructor(private ctx: appContext) {
     super({
@@ -41,12 +39,8 @@ export class showStoreAction extends CommandLineAction {
     });
   }
 
-  public setOutputFormat(outputFormat: string) {
-      this._output_format = outputFormat;
-  }
-
   private getPrinter(): printer {
-      switch (this._output_format) {
+      switch (this.ctx.opts.outputFormat) {
           case 'text': {
               return new textPrinter(this._scope.value ?? 'all', this._show_docs.value);
           }
@@ -70,10 +64,8 @@ export class showStoreAction extends CommandLineAction {
                 var printer = this.getPrinter();
                 // api infos
                 for(let model of models){
-                        printer.printModel(model);
-                        printer.printNormalizedTypes(model.NormalizedTypes);
-                        printer.printApiVersions(model.Versions);
-                    }
+                    printer.printModel(model);
+                }
                 printer.flushOutput();
             });
   }

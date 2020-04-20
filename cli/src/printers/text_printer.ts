@@ -17,11 +17,26 @@ export class textPrinter implements printer {
     // Print api model name
     this._prefix = "";
     console.log(`${this._prefix} Api Model: ${model.Name}`);
+
+    if (this._scope == "all" || this._scope == "normalized") {
+      this.printNormalizedTypes(model.NormalizedTypes);
+    }
+
+    if (this._scope == "all" || this._scope == "api-versions" || this._scope == "versioned") {
+      this.printApiVersions(model.Versions);
+    }
   }
 
-  public printNormalizedTypes(normalizedTypes: Iterable<adlruntime.NormalizedApiTypeModel>): void {
-    if(this._scope != "all" && this._scope != "normalized") return;
+  public flushOutput(): void {
+    this._prefix = "";
+    return;
+  }
 
+  /*
+   * Private methods
+   */
+
+  private printNormalizedTypes(normalizedTypes: Iterable<adlruntime.NormalizedApiTypeModel>): void {
     this._prefix = "";
     // normalized types
     console.log(`${this._prefix} Normalized Types:`);
@@ -44,7 +59,7 @@ export class textPrinter implements printer {
     }
   }
 
-  public printApiVersions(apiVersions: Iterable<adlruntime.ApiVersionModel>): void {
+  private printApiVersions(apiVersions: Iterable<adlruntime.ApiVersionModel>): void {
     if(this._scope != "all" && this._scope != "api-versions" && this._scope != "versioned") return;
     
     // api versions
@@ -57,7 +72,7 @@ export class textPrinter implements printer {
     }
   }
 
-  public printDocs(docs: adlruntime.ApiJsDoc | undefined): void {
+  private printDocs(docs: adlruntime.ApiJsDoc | undefined): void {
     if (!this._show_docs) return;
     if(docs == undefined) return;
     console.log(` ${this._prefix}docs:`)
@@ -70,15 +85,6 @@ export class textPrinter implements printer {
         console.log(`  ${this._prefix}${k}: ${v}`)
     }
   }
-
-  public flushOutput(): void {
-    this._prefix = "";
-    return;
-  }
-
-  /*
-   * Private methods
-   */
 
   private printApiTypeModel(model:adlruntime.ApiTypeModel): void {
     for(const prop  of model.Properties){
